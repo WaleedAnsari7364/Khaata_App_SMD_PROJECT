@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class KhaataManager extends AppCompatActivity {
+public class KhaataManager extends AppCompatActivity implements KhaataAdapter.ItemSelected {
 
     int Id;
+    String customer_name;
     Button btnBackKhaataManager,btnaddCustomer;
 
     RecyclerView rvKhaata;
@@ -53,6 +55,7 @@ public class KhaataManager extends AppCompatActivity {
     private void init()
     {
         Id = getIntent().getIntExtra("user_id", -1);
+        customer_name=getIntent().getStringExtra("customer_name");
         btnBackKhaataManager=findViewById(R.id.btnBackKhaataManager);
         btnaddCustomer=findViewById(R.id.btnaddCustomer);
         rvKhaata = findViewById(R.id.rvKhaata);
@@ -67,5 +70,18 @@ public class KhaataManager extends AppCompatActivity {
 
         adapter = new KhaataAdapter(this, customers);
         rvKhaata.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClicked(int index) {
+        Toast.makeText(this, String.valueOf(customers.get(index).getCid()), Toast.LENGTH_SHORT).show();
+        int Customer_id=customers.get(index).getCid();
+        customer_name=customers.get(index).getName();
+        Intent intent = new Intent(KhaataManager.this, SingleKhaataRecord.class);
+        intent.putExtra("user_id", Id);
+        intent.putExtra("customer_user_id",Customer_id);
+        intent.putExtra("customer_name",customer_name);
+        startActivity(intent);
+        finish();
     }
 }

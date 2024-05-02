@@ -20,9 +20,16 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
     ArrayList<Customer> customers;
     Context context;
 
-    public KhaataAdapter(Context c, ArrayList<Customer> list)
+    ItemSelected parentActivity;
+
+    public interface ItemSelected{
+        public void onItemClicked(int index);
+    }
+
+    public KhaataAdapter(Context context, ArrayList<Customer> list)
     {
-        context = c;
+
+        parentActivity=(ItemSelected) context;
         customers = list;
     }
 
@@ -36,6 +43,7 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.itemView.setTag(customers.get(position));
         holder.tvName.setText(customers.get(position).getName());
         holder.tvDate.setText(customers.get(position).getDate());
         holder.tvTime.setText(customers.get(position).getTime());
@@ -57,6 +65,13 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime= itemView.findViewById(R.id.tvTime);
             btnDeleteKhaata=itemView.findViewById(R.id.btnDeleteKhaata);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentActivity.onItemClicked(customers.indexOf((Customer) itemView.getTag()));
+                }
+            });
         }
     }
 
