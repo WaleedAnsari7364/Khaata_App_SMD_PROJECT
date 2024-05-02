@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Khaata_App</string>
+    <string name="add_email">Add Email Address</string>
+    <string name="add_password">Add Password</string>
+    <string name="back">Back</string>
+    <string name="loginpage">LOGIN PAGE</string>
+    <string name="registrationpage">REGISTRATION PAGE</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="Easy_Khata">EASY KHAATA</string>
+    <string name="Enter_username">Enter Username</string>
+    <string name="Welcome">WELCOME </string>
+    <string name="Move_to_Khaata">Move To Khaata</string>
+    <string name="Khaata_Manager">KHAATA MANAGER</string>
+</resources>
