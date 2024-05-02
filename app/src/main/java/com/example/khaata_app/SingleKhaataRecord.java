@@ -17,6 +17,7 @@ public class SingleKhaataRecord extends AppCompatActivity {
     TextView tvCustomerNameKhaata;
     String customer_name;
     int customer_id;
+    int vendor_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +25,7 @@ public class SingleKhaataRecord extends AppCompatActivity {
 
         customer_name = getIntent().getStringExtra("customer_name");
         customer_id = getIntent().getIntExtra("customer_user_id", -1);
+        vendor_id=getIntent().getIntExtra("user_id", -1);
         btnBackSingleRecordKhaata=findViewById(R.id.btnBackSingleRecordKhaata);
         tvCustomerNameKhaata=findViewById(R.id.tvCustomerNameKhaata);
 

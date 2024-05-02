@@ -15,5 +15,7 @@
     <string name="Enter_Customer_Name">Enter Customer Name</string>
     <string name="Add">ADD</string>
     <string name="Delete">DELETE</string>
+    <string name="Send">SEND</string>
+    <string name="Receive">RECEIVE</string>
     <string name="Add_Customer">ADD CUSTOMER</string>
 </resources>
