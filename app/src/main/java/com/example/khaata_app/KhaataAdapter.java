@@ -40,13 +40,13 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
                 .inflate(R.layout.activity_single_khaata, parent, false);
         return new ViewHolder(v);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.itemView.setTag(customers.get(position));
         holder.tvName.setText(customers.get(position).getName());
         holder.tvDate.setText(customers.get(position).getDate());
         holder.tvTime.setText(customers.get(position).getTime());
+        holder.tvRemainingAmount.setText(String.valueOf(customers.get(position).getRemaining_amount()));
     }
 
     @Override
@@ -56,15 +56,14 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
-        TextView tvName, tvDate,tvTime;
-        Button btnDeleteKhaata;
+        TextView tvName, tvDate,tvTime,tvRemainingAmount;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvName = itemView.findViewById(R.id.tvName);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime= itemView.findViewById(R.id.tvTime);
-            btnDeleteKhaata=itemView.findViewById(R.id.btnDeleteKhaata);
+            tvRemainingAmount=itemView.findViewById(R.id.tvRemainingAmount);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -22,6 +22,7 @@ public class DatabaseHelperCustomer {
     private final String KEY_NAME = "_name";
     private final String KEY_DATE="_date";
     private final String KEY_TIME="_time";
+    private final String KEY_REMAINING_AMOUNT="_remaining_amount";
 
 
     CreateDataBase helper;
@@ -48,6 +49,22 @@ public class DatabaseHelperCustomer {
         else
         {
             Toast.makeText(context, "Customer not updated", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateCustomerRemainingAmount(int id,int amount){
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_ID,id);
+        cv.put(KEY_REMAINING_AMOUNT, amount);
+
+        int records = database.update(TABLE_NAME, cv,  KEY_ID + "=?", new String[]{String.valueOf(id)});
+        if(records>0)
+        {
+            Toast.makeText(context, "Customer Remaining Amount updated", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(context, "Customer Remaining Amount not updated", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -94,6 +111,7 @@ public class DatabaseHelperCustomer {
         int name_Index = cursor.getColumnIndex(KEY_NAME);
         int date_Index = cursor.getColumnIndex(KEY_DATE);
         int time_index = cursor.getColumnIndex(KEY_TIME);
+        int remaining_amount_index=cursor.getColumnIndex(KEY_REMAINING_AMOUNT);
 
         if(cursor.moveToFirst())
         {
@@ -105,6 +123,7 @@ public class DatabaseHelperCustomer {
                 c.setName(cursor.getString(name_Index));
                 c.setDate(cursor.getString(date_Index));
                 c.setTime(cursor.getString(time_index));
+                c.setRemaining_amount(cursor.getInt(remaining_amount_index));
 
                 records.add(c);
             }while(cursor.moveToNext());
@@ -113,6 +132,17 @@ public class DatabaseHelperCustomer {
         cursor.close();
 
         return records;
+    }
+
+    public int getRemainingAmountForCustomer(int customerId) {
+        int remainingAmount = 0;
+        String[] selectionArgs = {String.valueOf(customerId)};
+        Cursor cursor = database.rawQuery("SELECT " + KEY_REMAINING_AMOUNT + " FROM " + TABLE_NAME + " WHERE " + KEY_ID + " = ?", selectionArgs);
+        if (cursor.moveToFirst()) {
+            remainingAmount = cursor.getInt(cursor.getColumnIndex(KEY_REMAINING_AMOUNT));
+        }
+        cursor.close();
+        return remainingAmount;
     }
 
     public void open()
@@ -140,7 +170,8 @@ public class DatabaseHelperCustomer {
                     KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     KEY_NAME + " TEXT NOT NULL," +
                     KEY_DATE + " TEXT NOT NULL," +
-                    KEY_TIME + " TEXT NOT NULL" +
+                    KEY_TIME + " TEXT NOT NULL," +
+                    KEY_REMAINING_AMOUNT+" INTEGER DEFAULT 0"+
                     ");";
             db.execSQL(query);
         }

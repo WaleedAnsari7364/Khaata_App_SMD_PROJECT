@@ -50,6 +50,7 @@ public class SendTransaction extends AppCompatActivity {
                 if(amount.isEmpty()){etAmountSendTransaction.setError("Field cannot be empty");}
                 else{
                     addTransaction();
+                    updateRemainingAmount();
                     Intent intent = new Intent(SendTransaction.this, SingleKhaataRecord.class);
                     intent.putExtra("customer_user_id", customer_id);
                     intent.putExtra("customer_name",customer_name);
@@ -74,5 +75,22 @@ public class SendTransaction extends AppCompatActivity {
         myDatabaseHelper.open();
         myDatabaseHelper.insertTransaction(vendor_id,customer_id,name,formattedDate,formattedTime,1,0,Integer.parseInt(amount));
         myDatabaseHelper.close();
+    }
+
+    public void updateRemainingAmount(){
+        String amount =etAmountSendTransaction.getText().toString().trim();
+        int adding_amount=Integer.parseInt(amount);
+
+        DatabaseHelperCustomer db=new DatabaseHelperCustomer(this);
+        db.open();
+        int remaining_amount=db.getRemainingAmountForCustomer(customer_id);
+        db.close();
+
+        int new_amount=remaining_amount+adding_amount;
+
+        DatabaseHelperCustomer db_update=new DatabaseHelperCustomer(this);
+        db_update.open();
+        db_update.updateCustomerRemainingAmount(customer_id,new_amount);
+        db.close();
     }
 }

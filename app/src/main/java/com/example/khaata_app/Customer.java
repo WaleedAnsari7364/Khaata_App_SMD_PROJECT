@@ -6,16 +6,17 @@ public class Customer {
     String name;
     String date;
     String time;
-
+    int remaining_amount;
     public Customer(){
 
     }
-    public Customer(int cid, int vid, String name, String date, String time) {
+    public Customer(int cid, int vid, String name, String date, String time,int remaining_amount) {
         this.cid = cid;
         this.vid = vid;
         this.name = name;
         this.date = date;
         this.time = time;
+        this.remaining_amount=remaining_amount;
     }
 
     public int getCid() {
@@ -56,5 +57,13 @@ public class Customer {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public int getRemaining_amount() {
+        return remaining_amount;
+    }
+
+    public void setRemaining_amount(int remaining_amount) {
+        this.remaining_amount = remaining_amount;
     }
 }
