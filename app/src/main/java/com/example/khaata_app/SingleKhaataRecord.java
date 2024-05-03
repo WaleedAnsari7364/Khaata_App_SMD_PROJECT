@@ -99,6 +99,13 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
     @Override
     public void onItemClicked(int index) {
         Toast.makeText(this, String.valueOf(transactions.get(index).getTid()), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(SingleKhaataRecord.this, EditTransaction.class);
+        intent.putExtra("user_id", vendor_id);
+        intent.putExtra("customer_user_id",customer_id);
+        intent.putExtra("customer_name",customer_name);
+        intent.putExtra("transaction_id",transactions.get(index).getTid());
+        startActivity(intent);
+        finish();
     }
 
 }
