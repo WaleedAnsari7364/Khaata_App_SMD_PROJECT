@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Khaata_App"
         tools:targetApi="31">
         <activity
+            android:name=".ReceiveTransaction"
+            android:exported="false" />
+        <activity
+            android:name=".SendTransaction"
+            android:exported="false" />
+        <activity
             android:name=".SingleKhaataRecord"
             android:exported="false" />
         <activity

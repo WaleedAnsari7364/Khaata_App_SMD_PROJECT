@@ -23,6 +23,7 @@ public class UserNameDisplay extends AppCompatActivity {
         int userId = getIntent().getIntExtra("user_id", -1);
         Button btnMoveToKhaata=findViewById(R.id.btnMoveToKhaata);
         TextView tvUserNameShow = findViewById(R.id.tvUserNameShow);
+        Button btnBackUSerNameDisplay=findViewById(R.id.btnBackUSerNameDisplay);
 
         if (username != null) {
             tvUserNameShow.setText(username);
@@ -30,6 +31,12 @@ public class UserNameDisplay extends AppCompatActivity {
             tvUserNameShow.setText("Unknown User");
         }
 
+        btnBackUSerNameDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         btnMoveToKhaata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

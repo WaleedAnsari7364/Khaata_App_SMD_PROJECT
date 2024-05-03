@@ -71,7 +71,7 @@ public class DatabaseHelperTransaction {
         }
     }
 
-    public void insertCustomer(int vendorid,int customer_id,String name, String date,String time,int amount)
+    public void insertTransaction(int vendorid,int customer_id,String name, String date,String time,int send,int receive,int amount)
     {
         ContentValues cv = new ContentValues();
         cv.put(KEY_VENDOR_ID,vendorid);
@@ -79,6 +79,8 @@ public class DatabaseHelperTransaction {
         cv.put(KEY_NAME,name);
         cv.put(KEY_DATE,date);
         cv.put(KEY_TIME,time);
+        cv.put(KEY_SEND,send);
+        cv.put(KEY_RECEIVE,receive);
         cv.put(KEY_AMOUNT,amount);
 
         long records = database.insert(TABLE_NAME, null, cv);
@@ -113,14 +115,14 @@ public class DatabaseHelperTransaction {
                 Transaction c = new Transaction();
 
                 c.setVid(cursor.getInt(vendor_id_index));
-                c.setCid(cursor.getInt(id_Index));
+                c.setCid(cursor.getInt(customer_id_index));
                 c.setTid(cursor.getInt(id_Index));
                 c.setName(cursor.getString(name_Index));
                 c.setDate(cursor.getString(date_Index));
                 c.setTime(cursor.getString(time_index));
-                c.setSend(cursor.getInt(id_Index));
-                c.setReceive(cursor.getInt(id_Index));
-                c.setAmount(cursor.getInt(id_Index));
+                c.setSend(cursor.getInt(send_index));
+                c.setReceive(cursor.getInt(receive_index));
+                c.setAmount(cursor.getInt(amount_index));
 
                 records.add(c);
             }while(cursor.moveToNext());
@@ -159,8 +161,8 @@ public class DatabaseHelperTransaction {
                     KEY_DATE + " TEXT NOT NULL," +
                     KEY_TIME + " TEXT NOT NULL," +
                     KEY_SEND + " INTEGER NOT NULL," +
-                    KEY_RECEIVE + "INTEGER NOT NULL," +
-                    KEY_AMOUNT + "INTEGER NOT NULL" +
+                    KEY_RECEIVE + " INTEGER NOT NULL," +
+                    KEY_AMOUNT + " INTEGER NOT NULL" +
                     ");";
             db.execSQL(query);
         }
