@@ -20,6 +20,7 @@ public class SendTransaction extends AppCompatActivity {
     Button btnBackSendTransaction,btnSendTransaction;
     TextView etNameSendTransaction,etAmountSendTransaction;
     int vendor_id,customer_id;
+    String customer_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +32,7 @@ public class SendTransaction extends AppCompatActivity {
         etAmountSendTransaction=findViewById(R.id.etAmountSendTransaction);
         vendor_id=getIntent().getIntExtra("user_id", -1);
         customer_id=getIntent().getIntExtra("customer_user_id", -1);
+        customer_name=getIntent().getStringExtra("customer_name");
 
         btnBackSendTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +52,7 @@ public class SendTransaction extends AppCompatActivity {
                     addTransaction();
                     Intent intent = new Intent(SendTransaction.this, SingleKhaataRecord.class);
                     intent.putExtra("customer_user_id", customer_id);
+                    intent.putExtra("customer_name",customer_name);
                     startActivity(intent);
                     finish();}
             }

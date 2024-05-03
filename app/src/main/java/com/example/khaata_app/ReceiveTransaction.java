@@ -19,6 +19,7 @@ public class ReceiveTransaction extends AppCompatActivity {
     Button btnBackReceiveTransaction,btnReceiveTransaction;
     TextView etNameReceiveTransaction,etAmountReceiveTransaction;
     int vendor_id,customer_id;
+    String customer_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +31,7 @@ public class ReceiveTransaction extends AppCompatActivity {
         etAmountReceiveTransaction=findViewById(R.id.etAmountReceiveTransaction);
         vendor_id=getIntent().getIntExtra("user_id", -1);
         customer_id=getIntent().getIntExtra("customer_user_id", -1);
+        customer_name=getIntent().getStringExtra("customer_name");
 
         btnBackReceiveTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +51,7 @@ public class ReceiveTransaction extends AppCompatActivity {
                     addTransaction();
                     Intent intent = new Intent(ReceiveTransaction.this, SingleKhaataRecord.class);
                     intent.putExtra("customer_user_id", customer_id);
+                    intent.putExtra("customer_name",customer_name);
                     startActivity(intent);
                     finish();}
             }
@@ -68,7 +71,7 @@ public class ReceiveTransaction extends AppCompatActivity {
 
         DatabaseHelperTransaction myDatabaseHelper = new DatabaseHelperTransaction(this);
         myDatabaseHelper.open();
-        myDatabaseHelper.insertTransaction(vendor_id,customer_id,name,formattedDate,formattedTime,1,0,Integer.parseInt(amount));
+        myDatabaseHelper.insertTransaction(vendor_id,customer_id,name,formattedDate,formattedTime,0,1,Integer.parseInt(amount));
         myDatabaseHelper.close();
     }
 }

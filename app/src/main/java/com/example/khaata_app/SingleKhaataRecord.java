@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class SingleKhaataRecord extends AppCompatActivity {
+public class SingleKhaataRecord extends AppCompatActivity implements TransactionAdapter.ItemSelected {
 
     Button btnBackSingleRecordKhaata,btnSend,btnReceive;
     TextView tvCustomerNameKhaata;
@@ -54,6 +54,7 @@ public class SingleKhaataRecord extends AppCompatActivity {
                 Intent intent = new Intent(SingleKhaataRecord.this, SendTransaction.class);
                 intent.putExtra("user_id", vendor_id);
                 intent.putExtra("customer_user_id",customer_id);
+                intent.putExtra("customer_name",customer_name);
                 startActivity(intent);
                 finish();
             }
@@ -65,6 +66,7 @@ public class SingleKhaataRecord extends AppCompatActivity {
                 Intent intent = new Intent(SingleKhaataRecord.this, ReceiveTransaction.class);
                 intent.putExtra("user_id", vendor_id);
                 intent.putExtra("customer_user_id",customer_id);
+                intent.putExtra("customer_name",customer_name);
                 startActivity(intent);
                 finish();
             }
@@ -92,6 +94,11 @@ public class SingleKhaataRecord extends AppCompatActivity {
 
         adapter = new TransactionAdapter(this, transactions);
         rvSingleRecordKhaata.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClicked(int index) {
+        Toast.makeText(this, String.valueOf(transactions.get(index).getTid()), Toast.LENGTH_SHORT).show();
     }
 
 }

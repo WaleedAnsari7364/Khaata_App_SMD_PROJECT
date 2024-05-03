@@ -11,14 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import android.graphics.Color;
+
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder>{
     ArrayList<Transaction> transactions;
     Context context;
 
+    TransactionAdapter.ItemSelected parentActivity;
+
+    public interface ItemSelected{
+        public void onItemClicked(int index);
+    }
     public TransactionAdapter(Context c, ArrayList<Transaction> list)
     {
         context=c;
+        parentActivity=(TransactionAdapter.ItemSelected) context;
         transactions = list;
     }
 
@@ -32,6 +40,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TransactionAdapter.ViewHolder holder, int position) {
+        holder.itemView.setTag(transactions.get(position));
+        int red=Color.parseColor("#FF0000");
+        int green=Color.parseColor("#008000");
+        if(transactions.get(position).getSend()==1) {
+            holder.tvAmountTransaction.setTextColor(red);
+        }
+        else if(transactions.get(position).getReceive()==1) {
+            holder.tvAmountTransaction.setTextColor(green);
+        }
         holder.tvNameTransaction.setText(transactions.get(position).getName());
         holder.tvDateTransaction.setText(transactions.get(position).getDate());
         holder.tvTimeTransaction.setText(transactions.get(position).getTime());
@@ -54,6 +71,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             tvTimeTransaction= itemView.findViewById(R.id.tvTimeTransaction);
             tvAmountTransaction=itemView.findViewById(R.id.tvAmountTransaction);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentActivity.onItemClicked(transactions.indexOf((Transaction) itemView.getTag()));
+                }
+            });
 
         }
     }
