@@ -3,6 +3,7 @@ package com.example.khaata_app;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +44,21 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.itemView.setTag(customers.get(position));
+        int red= Color.parseColor("#FF0000");
+        int green=Color.parseColor("#008000");
+        if(customers.get(position).getRemaining_amount()>=0) {
+            holder.tvRemainingAmount.setTextColor(red);
+            holder.tvRemainingAmount.setText(String.valueOf(customers.get(position).getRemaining_amount()));
+        }
+        else{
+            holder.tvRemainingAmount.setTextColor(green);
+            int remaining_amount=customers.get(position).getRemaining_amount();
+            int showed_value=Math.abs(remaining_amount);
+            holder.tvRemainingAmount.setText(String.valueOf(showed_value));
+        }
         holder.tvName.setText(customers.get(position).getName());
         holder.tvDate.setText(customers.get(position).getDate());
         holder.tvTime.setText(customers.get(position).getTime());
-        holder.tvRemainingAmount.setText(String.valueOf(customers.get(position).getRemaining_amount()));
     }
 
     @Override
