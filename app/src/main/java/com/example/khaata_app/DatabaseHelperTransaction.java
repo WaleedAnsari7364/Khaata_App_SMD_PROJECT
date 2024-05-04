@@ -178,6 +178,21 @@
             return amount;
         }
 
+        public String getName(int transactionId) {
+            String name = null; // Default value if transaction_id doesn't exist
+
+            String[] selectionArgs = { String.valueOf(transactionId) };
+            Cursor cursor = database.rawQuery("SELECT " + KEY_NAME + " FROM " + TABLE_NAME + " WHERE " + KEY_ID + " = ?", selectionArgs);
+
+            if(cursor.moveToFirst()) {
+                name = cursor.getString(cursor.getColumnIndex(KEY_NAME));
+            }
+
+            cursor.close();
+
+            return name;
+        }
+
         public void open()
         {
             helper = new DatabaseHelperTransaction.CreateDataBase(context, DATABASE_NAME, null, DATABASE_VERSION);

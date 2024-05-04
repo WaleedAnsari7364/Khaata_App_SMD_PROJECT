@@ -21,6 +21,8 @@ public class EditTransaction extends AppCompatActivity {
     EditText etNameEditTransaction,etAmountEditTransaction;
     int vendor_id,customer_id,transaction_id;
     String customer_name;
+    String transaction_name;
+    int transaction_amount_to_show;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,16 @@ public class EditTransaction extends AppCompatActivity {
         customer_id = getIntent().getIntExtra("customer_user_id", -1);
         vendor_id=getIntent().getIntExtra("user_id", -1);
         transaction_id=getIntent().getIntExtra("transaction_id", -1);
+
+        DatabaseHelperTransaction helper=new DatabaseHelperTransaction(EditTransaction.this);
+        helper.open();
+        transaction_name=helper.getName(transaction_id);
+        transaction_amount_to_show=helper.getAmount(transaction_id);
+        helper.close();
+
+        etNameEditTransaction.setText(transaction_name);
+        etAmountEditTransaction.setText(String.valueOf(transaction_amount_to_show));
+
 
         btnBackEditTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,10 +88,6 @@ public class EditTransaction extends AppCompatActivity {
                         }
                         db.updateCustomerRemainingAmount(customer_id,actual_amount);
                         db.close();
-                        Log.d("EditTransaction", "Send Value: " + send_value);
-                        Log.d("EditTransaction", "Remaining Amount: " + remaining_amount);
-                        Log.d("EditTransaction", "Transaction Amount: " + transaction_amount);
-                        Log.d("EditTransaction", "Actual Amount: " + actual_amount);
 
                         Intent intent = new Intent(EditTransaction.this, SingleKhaataRecord.class);
                         intent.putExtra("user_id", vendor_id);
@@ -97,7 +105,47 @@ public class EditTransaction extends AppCompatActivity {
                     }
                 });
                 deleteDialog.show();
+            }
+        });
 
+        btnUpdateEditTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int changed_amount=Integer.parseInt(etAmountEditTransaction.getText().toString().trim());
+                String changed_name=etNameEditTransaction.getText().toString().trim();
+                DatabaseHelperTransaction database = new DatabaseHelperTransaction(EditTransaction.this);
+                database.open();
+
+                int send_value=database.getSendValue(transaction_id);
+                int receive_value=database.getReceiveValue(transaction_id);
+                database.updateTransaction(transaction_id,changed_name,changed_amount);
+                database.close();
+
+                DatabaseHelperCustomer db=new DatabaseHelperCustomer(EditTransaction.this);
+                db.open();
+                int remaining_amount=db.getRemainingAmountForCustomer(customer_id);
+                if (send_value==1){
+                    int actual_amount_after_subtracting_send_amount=remaining_amount-transaction_amount_to_show;
+                    int updated_amount=actual_amount_after_subtracting_send_amount+changed_amount;
+                    db.updateCustomerRemainingAmount(customer_id,updated_amount);
+                }
+                else if (receive_value==1){
+                    int actual_amount_after_adding_receive_amount=remaining_amount+transaction_amount_to_show;
+                    int updated_amount=actual_amount_after_adding_receive_amount-changed_amount;
+                    db.updateCustomerRemainingAmount(customer_id,updated_amount);
+                }
+                db.close();
+
+
+
+
+                Intent intent = new Intent(EditTransaction.this, SingleKhaataRecord.class);
+                intent.putExtra("user_id", vendor_id);
+                intent.putExtra("customer_user_id",customer_id);
+                intent.putExtra("customer_name",customer_name);
+                startActivity(intent);
+                finish();
             }
         });
 

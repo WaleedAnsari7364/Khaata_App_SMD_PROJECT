@@ -48,6 +48,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         }
         else if(transactions.get(position).getReceive()==1) {
             holder.tvAmountTransaction.setTextColor(green);
+            int remaining_amount=transactions.get(position).getAmount();
+            int showed_value=Math.abs(remaining_amount);
+            holder.tvAmountTransaction.setText(String.valueOf(showed_value));
         }
         holder.tvNameTransaction.setText(transactions.get(position).getName());
         holder.tvDateTransaction.setText(transactions.get(position).getDate());
