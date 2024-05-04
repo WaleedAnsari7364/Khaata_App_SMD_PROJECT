@@ -14,8 +14,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import android.telephony.SmsManager;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class ReceiveTransaction extends AppCompatActivity {
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1001;
     Button btnBackReceiveTransaction,btnReceiveTransaction;
     TextView etNameReceiveTransaction,etAmountReceiveTransaction;
     int vendor_id,customer_id;
@@ -50,6 +59,13 @@ public class ReceiveTransaction extends AppCompatActivity {
                 else{
                     addTransaction();
                     updateRemainingAmount();
+                    DatabaseHelperCustomer db = new DatabaseHelperCustomer(ReceiveTransaction.this);
+                    db.open();
+                    String phoneNumber = db.getPhoneNumber(customer_id);
+                    db.close();
+                    if (phoneNumber != null) {
+                        sendSMS(phoneNumber, "Your transaction with Name : " + name + " and Amount : " + amount+" has been added to khata which has been received by us");
+                    }
                     Intent intent = new Intent(ReceiveTransaction.this, SingleKhaataRecord.class);
                     intent.putExtra("customer_user_id", customer_id);
                     intent.putExtra("customer_name",customer_name);
@@ -91,5 +107,22 @@ public class ReceiveTransaction extends AppCompatActivity {
         db_update.open();
         db_update.updateCustomerRemainingAmount(customer_id,new_amount);
         db.close();
+    }
+
+    private void sendSMS(String phoneNumber, String message) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+            Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void requestSMSPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+        }
     }
 }

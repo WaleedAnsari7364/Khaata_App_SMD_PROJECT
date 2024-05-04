@@ -20,4 +20,5 @@
     <string name="Add_Customer">ADD CUSTOMER</string>
     <string name="Enter_Name">Enter Name</string>
     <string name="Enter_Amount">Enter Amount</string>
+    <string name="Enter_Phone">Enter Phone</string>
 </resources>

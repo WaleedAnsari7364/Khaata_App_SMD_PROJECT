@@ -7,16 +7,18 @@ public class Customer {
     String date;
     String time;
     int remaining_amount;
+    String phone_number;
     public Customer(){
 
     }
-    public Customer(int cid, int vid, String name, String date, String time,int remaining_amount) {
+    public Customer(int cid, int vid, String name, String date, String time,int remaining_amount,String phone_number) {
         this.cid = cid;
         this.vid = vid;
         this.name = name;
         this.date = date;
         this.time = time;
         this.remaining_amount=remaining_amount;
+        this.phone_number=phone_number;
     }
 
     public int getCid() {
@@ -66,4 +68,13 @@ public class Customer {
     public void setRemaining_amount(int remaining_amount) {
         this.remaining_amount = remaining_amount;
     }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
 }
+

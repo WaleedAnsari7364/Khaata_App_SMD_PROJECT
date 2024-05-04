@@ -23,6 +23,8 @@ public class DatabaseHelperCustomer {
     private final String KEY_DATE="_date";
     private final String KEY_TIME="_time";
     private final String KEY_REMAINING_AMOUNT="_remaining_amount";
+    private final String KEY_PHONE_NUMBER="_phone_number";
+
 
 
     CreateDataBase helper;
@@ -82,13 +84,14 @@ public class DatabaseHelperCustomer {
         }
     }
 
-    public void insertCustomer(int vendorid,String name, String date,String time)
+    public void insertCustomer(int vendorid,String name, String date,String time,String phone_number)
     {
         ContentValues cv = new ContentValues();
         cv.put(KEY_VENDOR_ID,vendorid);
         cv.put(KEY_NAME,name);
         cv.put(KEY_DATE,date);
         cv.put(KEY_TIME,time);
+        cv.put(KEY_PHONE_NUMBER,phone_number);
 
         long records = database.insert(TABLE_NAME, null, cv);
         if(records == -1)
@@ -112,6 +115,7 @@ public class DatabaseHelperCustomer {
         int date_Index = cursor.getColumnIndex(KEY_DATE);
         int time_index = cursor.getColumnIndex(KEY_TIME);
         int remaining_amount_index=cursor.getColumnIndex(KEY_REMAINING_AMOUNT);
+        int phone_number_index=cursor.getColumnIndex(KEY_PHONE_NUMBER);
 
         if(cursor.moveToFirst())
         {
@@ -124,6 +128,7 @@ public class DatabaseHelperCustomer {
                 c.setDate(cursor.getString(date_Index));
                 c.setTime(cursor.getString(time_index));
                 c.setRemaining_amount(cursor.getInt(remaining_amount_index));
+                c.setPhone_number(cursor.getString(phone_number_index));
 
                 records.add(c);
             }while(cursor.moveToNext());
@@ -143,6 +148,17 @@ public class DatabaseHelperCustomer {
         }
         cursor.close();
         return remainingAmount;
+    }
+
+    public String getPhoneNumber(int customerId) {
+        String phone_number = null;
+        String[] selectionArgs = {String.valueOf(customerId)};
+        Cursor cursor = database.rawQuery("SELECT " + KEY_PHONE_NUMBER + " FROM " + TABLE_NAME + " WHERE " + KEY_ID + " = ?", selectionArgs);
+        if (cursor.moveToFirst()) {
+            phone_number = cursor.getString(cursor.getColumnIndex(KEY_PHONE_NUMBER));
+        }
+        cursor.close();
+        return phone_number;
     }
 
     public void open()
@@ -171,7 +187,8 @@ public class DatabaseHelperCustomer {
                     KEY_NAME + " TEXT NOT NULL," +
                     KEY_DATE + " TEXT NOT NULL," +
                     KEY_TIME + " TEXT NOT NULL," +
-                    KEY_REMAINING_AMOUNT+" INTEGER DEFAULT 0"+
+                    KEY_REMAINING_AMOUNT+" INTEGER DEFAULT 0,"+
+                    KEY_PHONE_NUMBER+" TEXT NOT NULL"+
                     ");";
             db.execSQL(query);
         }

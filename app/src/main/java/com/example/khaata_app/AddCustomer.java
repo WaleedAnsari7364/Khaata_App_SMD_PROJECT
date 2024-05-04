@@ -16,7 +16,7 @@ import java.util.Date;
 public class AddCustomer extends AppCompatActivity {
 
     Button btnBackAddCustomer,btnAddAddCustomer;
-    EditText etNameAddCustomer;
+    EditText etNameAddCustomer,etPhoneAddCustomer;
     int Id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class AddCustomer extends AppCompatActivity {
         btnBackAddCustomer=findViewById(R.id.btnBackAddCustomer);
         btnAddAddCustomer=findViewById(R.id.btnAddAddCustomer);
         etNameAddCustomer=findViewById(R.id.etNameAddCustomer);
+        etPhoneAddCustomer=findViewById(R.id.etPhoneAddCustomer);
         Id = getIntent().getIntExtra("user_id", -1);
 
         btnBackAddCustomer.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +40,9 @@ public class AddCustomer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String name=etNameAddCustomer.getText().toString().trim();
+                String phone=etPhoneAddCustomer.getText().toString().trim();
                 if(name.isEmpty()){etNameAddCustomer.setError("Field cannot be empty");}
+                if(phone.isEmpty()){etPhoneAddCustomer.setError("Field cannot be empty");}
                 else{
                     addCustomer();
                     Intent intent = new Intent(AddCustomer.this, KhaataManager.class);
@@ -52,6 +55,7 @@ public class AddCustomer extends AppCompatActivity {
 
     public void addCustomer(){
         String name=etNameAddCustomer.getText().toString().trim();
+        String phone=etPhoneAddCustomer.getText().toString().trim();
 
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -63,7 +67,7 @@ public class AddCustomer extends AppCompatActivity {
 
         DatabaseHelperCustomer myDatabaseHelper = new DatabaseHelperCustomer(this);
         myDatabaseHelper.open();
-        myDatabaseHelper.insertCustomer(Id,name, formattedDate,formattedTime);
+        myDatabaseHelper.insertCustomer(Id,name, formattedDate,formattedTime,phone);
         myDatabaseHelper.close();
 
     }
