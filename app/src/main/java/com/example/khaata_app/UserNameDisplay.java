@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -25,6 +26,9 @@ public class UserNameDisplay extends AppCompatActivity {
         TextView tvUserNameShow = findViewById(R.id.tvUserNameShow);
         Button btnBackUSerNameDisplay=findViewById(R.id.btnBackUSerNameDisplay);
 
+        // Currency declaration
+        Spinner currency = findViewById(R.id.spinnerCurrency);
+
         if (username != null) {
             tvUserNameShow.setText(username);
         } else {
@@ -40,8 +44,13 @@ public class UserNameDisplay extends AppCompatActivity {
         btnMoveToKhaata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get the selected currency
+                String selectedCurrency = currency.getSelectedItem().toString();
+
                 Intent intent = new Intent(UserNameDisplay.this, KhaataManager.class);
                 intent.putExtra("user_id", userId);
+                // Passing the currency to next activity
+                intent.putExtra("selected_currency", selectedCurrency);
                 startActivity(intent);
             }
         });

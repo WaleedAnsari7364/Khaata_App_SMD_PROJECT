@@ -17,17 +17,19 @@ import android.graphics.Color;
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder>{
     ArrayList<Transaction> transactions;
     Context context;
+    String selectedCurrency;
 
     TransactionAdapter.ItemSelected parentActivity;
 
     public interface ItemSelected{
         public void onItemClicked(int index);
     }
-    public TransactionAdapter(Context c, ArrayList<Transaction> list)
+    public TransactionAdapter(Context c, ArrayList<Transaction> list, String selectedCurrency)
     {
         context=c;
         parentActivity=(TransactionAdapter.ItemSelected) context;
         transactions = list;
+        this.selectedCurrency = selectedCurrency;
     }
 
     @NonNull
@@ -55,12 +57,37 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.tvNameTransaction.setText(transactions.get(position).getName());
         holder.tvDateTransaction.setText(transactions.get(position).getDate());
         holder.tvTimeTransaction.setText(transactions.get(position).getTime());
-        holder.tvAmountTransaction.setText(String.valueOf(transactions.get(position).getAmount()));
+        double transactionAmount = transactions.get(position).getAmount();
+        holder.tvAmountTransaction.setText(getConvertedAmount(transactionAmount));
     }
 
     @Override
     public int getItemCount() {
         return transactions.size();
+    }
+
+    private String getConvertedAmount(double amount) {
+        double convertedAmount = 0;
+        String formattedAmount = "";
+        switch (selectedCurrency) {
+            case "Rupees":
+                convertedAmount = amount;
+                formattedAmount = "PKR " + String.format("%.2f", convertedAmount);
+                break;
+            case "Dollar":
+                convertedAmount = amount / 278.05;
+                formattedAmount = "$ " + String.format("%.2f", convertedAmount);
+                break;
+            case "Riyal":
+                convertedAmount = amount / 74.13;
+                formattedAmount = "SAR " + String.format("%.2f", convertedAmount);
+                break;
+            case "Yen":
+                convertedAmount = amount / 1.82;
+                formattedAmount = "¥ " + String.format("%.2f", convertedAmount);
+                break;
+        }
+        return formattedAmount;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

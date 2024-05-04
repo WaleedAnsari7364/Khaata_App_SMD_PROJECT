@@ -22,6 +22,7 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
     Button btnBackSingleRecordKhaata,btnSend,btnReceive;
     TextView tvCustomerNameKhaata;
     String customer_name;
+    String selected_currency;
     int customer_id;
     int vendor_id;
 
@@ -53,6 +54,7 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
             public void onClick(View v) {
                 Intent intent = new Intent(SingleKhaataRecord.this, SendTransaction.class);
                 intent.putExtra("user_id", vendor_id);
+                intent.putExtra("selected_currency", selected_currency);
                 intent.putExtra("customer_user_id",customer_id);
                 intent.putExtra("customer_name",customer_name);
                 startActivity(intent);
@@ -67,6 +69,7 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
                 intent.putExtra("user_id", vendor_id);
                 intent.putExtra("customer_user_id",customer_id);
                 intent.putExtra("customer_name",customer_name);
+                intent.putExtra("selected_currency", selected_currency);
                 startActivity(intent);
                 finish();
             }
@@ -75,6 +78,7 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
 
     private void init(){
         customer_name = getIntent().getStringExtra("customer_name");
+        selected_currency = getIntent().getStringExtra("selected_currency");
         customer_id = getIntent().getIntExtra("customer_user_id", -1);
         vendor_id=getIntent().getIntExtra("user_id", -1);
         btnBackSingleRecordKhaata=findViewById(R.id.btnBackSingleRecordKhaata);
@@ -92,7 +96,7 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
         transactions = database.readAllTransactions(customer_id);
         database.close();
 
-        adapter = new TransactionAdapter(this, transactions);
+        adapter = new TransactionAdapter(this, transactions, selected_currency);
         rvSingleRecordKhaata.setAdapter(adapter);
     }
 
@@ -103,6 +107,7 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
         intent.putExtra("user_id", vendor_id);
         intent.putExtra("customer_user_id",customer_id);
         intent.putExtra("customer_name",customer_name);
+        intent.putExtra("selected_currency", selected_currency);
         intent.putExtra("transaction_id",transactions.get(index).getTid());
         startActivity(intent);
         finish();

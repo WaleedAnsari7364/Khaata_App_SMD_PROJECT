@@ -20,6 +20,7 @@ public class KhaataManager extends AppCompatActivity implements KhaataAdapter.It
 
     int Id;
     String customer_name;
+    String selected_currency;
     Button btnBackKhaataManager,btnaddCustomer;
 
     RecyclerView rvKhaata;
@@ -55,6 +56,8 @@ public class KhaataManager extends AppCompatActivity implements KhaataAdapter.It
     private void init()
     {
         Id = getIntent().getIntExtra("user_id", -1);
+        // Accepting selected currency from intent
+        selected_currency = getIntent().getStringExtra("selected_currency");
         customer_name=getIntent().getStringExtra("customer_name");
         btnBackKhaataManager=findViewById(R.id.btnBackKhaataManager);
         btnaddCustomer=findViewById(R.id.btnaddCustomer);
@@ -68,7 +71,7 @@ public class KhaataManager extends AppCompatActivity implements KhaataAdapter.It
         customers = database.readAllCustomers(Id);
         database.close();
 
-        adapter = new KhaataAdapter(this, customers);
+        adapter = new KhaataAdapter(this, customers, selected_currency);
         rvKhaata.setAdapter(adapter);
     }
 
@@ -79,6 +82,7 @@ public class KhaataManager extends AppCompatActivity implements KhaataAdapter.It
         customer_name=customers.get(index).getName();
         Intent intent = new Intent(KhaataManager.this, SingleKhaataRecord.class);
         intent.putExtra("user_id", Id);
+        intent.putExtra("selected_currency", selected_currency);
         intent.putExtra("customer_user_id",Customer_id);
         intent.putExtra("customer_name",customer_name);
         startActivity(intent);

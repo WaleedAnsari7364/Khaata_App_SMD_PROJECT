@@ -2,6 +2,7 @@ package com.example.khaata_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class SendTransaction extends AppCompatActivity {
     TextView etNameSendTransaction,etAmountSendTransaction;
     int vendor_id,customer_id;
     String customer_name;
+    String selected_currency;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,7 @@ public class SendTransaction extends AppCompatActivity {
         vendor_id=getIntent().getIntExtra("user_id", -1);
         customer_id=getIntent().getIntExtra("customer_user_id", -1);
         customer_name=getIntent().getStringExtra("customer_name");
+        selected_currency = getIntent().getStringExtra("selected_currency");
 
         btnBackSendTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,32 +58,39 @@ public class SendTransaction extends AppCompatActivity {
         btnSendTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name=etNameSendTransaction.getText().toString().trim();
-                String amount=etAmountSendTransaction.getText().toString().trim();
-                if(name.isEmpty()){etNameSendTransaction.setError("Field cannot be empty");}
-                if(amount.isEmpty()){etAmountSendTransaction.setError("Field cannot be empty");}
-                else{
-                    addTransaction();
-                    updateRemainingAmount();
-                    DatabaseHelperCustomer db = new DatabaseHelperCustomer(SendTransaction.this);
-                    db.open();
-                    String phoneNumber = db.getPhoneNumber(customer_id);
-                    db.close();
-                    if (phoneNumber != null) {
-                        sendSMS(phoneNumber, "Your transaction with Name : " + name + " and Amount : " + amount+" has been added to khata which has been sent to you");
+                String name = etNameSendTransaction.getText().toString().trim();
+                String amount = etAmountSendTransaction.getText().toString().trim();
+                if (name.isEmpty()) {
+                    etNameSendTransaction.setError("Field cannot be empty");
+                } else if (amount.isEmpty()) {
+                    etAmountSendTransaction.setError("Field cannot be empty");
+                } else {
+                    String amountInRupees = getRupees(amount);
+                    if (!amountInRupees.equals("Invalid Amount")) {
+                        addTransaction(amountInRupees);
+                        updateRemainingAmount(amountInRupees);
+                        DatabaseHelperCustomer db = new DatabaseHelperCustomer(SendTransaction.this);
+                        db.open();
+                        String phoneNumber = db.getPhoneNumber(customer_id);
+                        db.close();
+                        if (phoneNumber != null) {
+                            sendSMS(phoneNumber, "Your transaction with Name : " + name + " and Amount : " + amount + " " + selected_currency + " has been added to khata which has been sent to you");
+                        }
+                        Intent intent = new Intent(SendTransaction.this, SingleKhaataRecord.class);
+                        intent.putExtra("customer_user_id", customer_id);
+                        intent.putExtra("customer_name", customer_name);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Invalid amount entered!", Toast.LENGTH_SHORT).show();
                     }
-                    Intent intent = new Intent(SendTransaction.this, SingleKhaataRecord.class);
-                    intent.putExtra("customer_user_id", customer_id);
-                    intent.putExtra("customer_name",customer_name);
-                    startActivity(intent);
-                    finish();}
+                }
             }
         });
     }
 
-    public void addTransaction(){
+    public void addTransaction(String amount){
         String name=etNameSendTransaction.getText().toString().trim();
-        String amount=etAmountSendTransaction.getText().toString().trim();
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String formattedDate = dateFormat.format(currentDate);
@@ -95,8 +105,7 @@ public class SendTransaction extends AppCompatActivity {
         myDatabaseHelper.close();
     }
 
-    public void updateRemainingAmount(){
-        String amount =etAmountSendTransaction.getText().toString().trim();
+    public void updateRemainingAmount(String amount){
         int adding_amount=Integer.parseInt(amount);
 
         DatabaseHelperCustomer db=new DatabaseHelperCustomer(this);
@@ -126,6 +135,33 @@ public class SendTransaction extends AppCompatActivity {
     private void requestSMSPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+        }
+    }
+
+    private String getRupees(String amount) {
+        try {
+            double convertedAmount = Double.parseDouble(amount);
+            double rupees = 0;
+            switch (selected_currency) {
+                case "Rupees":
+                    rupees = convertedAmount;
+                    break;
+                case "Dollar":
+                    rupees = convertedAmount * 278.05;
+                    break;
+                case "Riyal":
+                    rupees = convertedAmount * 74.13;
+                    break;
+                case "Yen":
+                    rupees = convertedAmount * 1.82;
+                    break;
+            }
+            int r = (int) Math.round(rupees);
+            return r + "";
+        } catch (NumberFormatException e) {
+            // Handle the case where amount is not a valid number
+            e.printStackTrace(); // Or log the error
+            return "Invalid Amount";
         }
     }
 }
