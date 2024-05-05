@@ -1,6 +1,8 @@
 package com.example.khaata_app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,10 @@ public class KhaataManager extends AppCompatActivity implements KhaataAdapter.It
     String customer_name;
     String selected_currency;
     Button btnBackKhaataManager,btnaddCustomer;
+
+    // SharedPreferences key
+    private static final String SHARED_PREFS = "com.example.khaata_app.shared_prefs";
+    private static final String SELECTED_CURRENCY_KEY = "selected_currency";
 
     RecyclerView rvKhaata;
     LinearLayoutManager manager;
@@ -71,7 +77,14 @@ public class KhaataManager extends AppCompatActivity implements KhaataAdapter.It
         customers = database.readAllCustomers(Id);
         database.close();
 
-        adapter = new KhaataAdapter(this, customers, selected_currency);
+        // Retrieve the stored currency from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        selected_currency = sharedPreferences.getString(SELECTED_CURRENCY_KEY, "Rupees");
+
+        // Retrieve the SharedPreferences instance
+        sharedPreferences = getSharedPreferences("com.example.khaata_app.shared_prefs", Context.MODE_PRIVATE);
+
+        adapter = new KhaataAdapter(this, customers, sharedPreferences);
         rvKhaata.setAdapter(adapter);
     }
 

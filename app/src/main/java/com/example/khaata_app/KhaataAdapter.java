@@ -3,6 +3,7 @@ package com.example.khaata_app;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,12 +31,11 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
         public void onItemClicked(int index);
     }
 
-    public KhaataAdapter(Context context, ArrayList<Customer> list, String selectedCurrency)
+    public KhaataAdapter(Context context, ArrayList<Customer> list, SharedPreferences sharedPreferences)
     {
-
         parentActivity=(ItemSelected) context;
         customers = list;
-        this.selectedCurrency = selectedCurrency;
+        selectedCurrency = sharedPreferences.getString("selected_currency", "Rupees");
     }
 
     @NonNull

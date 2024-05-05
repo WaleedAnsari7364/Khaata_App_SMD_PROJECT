@@ -1,6 +1,8 @@
 package com.example.khaata_app;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +26,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public interface ItemSelected{
         public void onItemClicked(int index);
     }
-    public TransactionAdapter(Context c, ArrayList<Transaction> list, String selectedCurrency)
+    public TransactionAdapter(Context c, ArrayList<Transaction> list, SharedPreferences sharedPreferences)
     {
         context=c;
         parentActivity=(TransactionAdapter.ItemSelected) context;
         transactions = list;
-        this.selectedCurrency = selectedCurrency;
+        selectedCurrency = sharedPreferences.getString("selected_currency", "Rupees");
     }
 
     @NonNull
