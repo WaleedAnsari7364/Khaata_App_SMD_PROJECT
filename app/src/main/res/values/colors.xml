@@ -3,5 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="background">#E1BEE7</color>
+    <color name="background_user_name_display">#454545</color>
 
 </resources>
