@@ -36,6 +36,15 @@
             android:textStyle="bold|italic" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnPdfGenerator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/Generate_Pdf"
+        android:textSize="20sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

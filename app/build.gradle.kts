@@ -42,5 +42,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation ("com.google.android.material:material:1.4.0")
     implementation ("androidx.core:core-ktx:version_number")
+    implementation ("com.itextpdf:itext7-core:7.2.1")
 
 }

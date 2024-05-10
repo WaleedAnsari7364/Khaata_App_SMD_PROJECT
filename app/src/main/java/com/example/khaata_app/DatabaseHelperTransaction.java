@@ -147,6 +147,33 @@
 
             return sendValue;
         }
+        public ArrayList<Transaction> readTransactionsWithinDateRange(int customerId, String startDate, String endDate) {
+            ArrayList<Transaction> records = new ArrayList<>();
+            String[] selectionArgs = {String.valueOf(customerId), startDate, endDate};
+            Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + KEY_CUSTOMER_ID + " = ? AND " + KEY_DATE + " BETWEEN ? AND ?", selectionArgs);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    Transaction transaction = new Transaction();
+                    transaction.setVid(cursor.getInt(cursor.getColumnIndex(KEY_VENDOR_ID)));
+                    transaction.setCid(cursor.getInt(cursor.getColumnIndex(KEY_CUSTOMER_ID)));
+                    transaction.setTid(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+                    transaction.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+                    transaction.setDate(cursor.getString(cursor.getColumnIndex(KEY_DATE)));
+                    transaction.setTime(cursor.getString(cursor.getColumnIndex(KEY_TIME)));
+                    transaction.setSend(cursor.getInt(cursor.getColumnIndex(KEY_SEND)));
+                    transaction.setReceive(cursor.getInt(cursor.getColumnIndex(KEY_RECEIVE)));
+                    transaction.setAmount(cursor.getInt(cursor.getColumnIndex(KEY_AMOUNT)));
+
+                    records.add(transaction);
+                } while (cursor.moveToNext());
+
+                cursor.close();
+            }
+
+            return records;
+        }
+
 
         public int getReceiveValue(int transactionId) {
             int receiveValue = -1; // Default value if transaction_id doesn't exist
