@@ -24,6 +24,7 @@
     <string name="Generate_Pdf">Generate PDF</string>
     <string name="Send_Report">Send Report</string>
     <string name="Request">Request</string>
+    <string name="Update_Delete_Dialog">Update And Delete Dialog</string>
     <string-array name="currency_options">
         <item>Rupees</item>
         <item>Dollar</item>

@@ -158,7 +158,66 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
                     parentActivity.onItemClicked(customers.indexOf((Customer) itemView.getTag()));
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int currentPosition = getAdapterPosition();
+                    if (currentPosition != RecyclerView.NO_POSITION) {
+                        showUpdateDeleteDialog(customers.get(currentPosition),currentPosition);
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
     }
 
+
+    private void showUpdateDeleteDialog(final Customer customer,final int position) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.dialog_update_delete_customer, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setView(dialogView);
+
+        final EditText etName = dialogView.findViewById(R.id.etNameDialog);
+        final EditText etPhoneNumber = dialogView.findViewById(R.id.etPhoneDialog);
+
+
+        etName.setText(customer.getName());
+        etPhoneNumber.setText(customer.getPhone_number());
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String newName = etName.getText().toString();
+                        String newPhoneNumber = etPhoneNumber.getText().toString();
+                        DatabaseHelperCustomer db=new DatabaseHelperCustomer(context);
+                        db.open();
+                        db.updateCustomer(customer.getCid(),newName,newPhoneNumber);
+                        db.close();
+                        customer.setName(newName);
+                        customer.setPhone_number(newPhoneNumber);
+                        notifyItemChanged(position);
+                    }
+                })
+                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        DatabaseHelperCustomer db=new DatabaseHelperCustomer(context);
+                        db.open();
+                        db.deleteCustomer(customer.getCid());
+                        db.close();
+                        customers.remove(position);
+                        notifyDataSetChanged();
+
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
+    }
 }
+
+

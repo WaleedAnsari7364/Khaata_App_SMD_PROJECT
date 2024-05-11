@@ -37,11 +37,12 @@ public class DatabaseHelperCustomer {
 
     }
 
-    public void updateCustomer(int id, String name)
+    public void updateCustomer(int id, String name,String phone)
     {
         ContentValues cv = new ContentValues();
         cv.put(KEY_ID,id);
         cv.put(KEY_NAME, name);
+        cv.put(KEY_PHONE_NUMBER,phone);
 
         int records = database.update(TABLE_NAME, cv,  KEY_ID + "=?", new String[]{String.valueOf(id)});
         if(records>0)
