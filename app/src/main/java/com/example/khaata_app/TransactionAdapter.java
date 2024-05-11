@@ -1,6 +1,8 @@
 package com.example.khaata_app;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,24 +16,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import android.graphics.Color;
+import android.content.Intent;
+import android.net.Uri;
 
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder>{
     ArrayList<Transaction> transactions;
     Context context;
     String selectedCurrency;
+    Button btnSendReceiveTransaction;
 
     TransactionAdapter.ItemSelected parentActivity;
-
+    int customer_id;
     public interface ItemSelected{
         public void onItemClicked(int index);
     }
-    public TransactionAdapter(Context c, ArrayList<Transaction> list, SharedPreferences sharedPreferences)
+    public TransactionAdapter(Context c, ArrayList<Transaction> list, SharedPreferences sharedPreferences,int customerId)
     {
         context=c;
         parentActivity=(TransactionAdapter.ItemSelected) context;
         transactions = list;
         selectedCurrency = sharedPreferences.getString("selected_currency", "Rupees");
+        customer_id=customerId;
     }
 
     @NonNull
@@ -49,8 +55,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         int green=Color.parseColor("#008000");
         if(transactions.get(position).getSend()==1) {
             holder.tvAmountTransaction.setTextColor(red);
+            btnSendReceiveTransaction.setText("Request");
         }
         else if(transactions.get(position).getReceive()==1) {
+            btnSendReceiveTransaction.setText("Send");
             holder.tvAmountTransaction.setTextColor(green);
             int remaining_amount=transactions.get(position).getAmount();
             int showed_value=Math.abs(remaining_amount);
@@ -102,6 +110,54 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             tvDateTransaction = itemView.findViewById(R.id.tvDateTransaction);
             tvTimeTransaction= itemView.findViewById(R.id.tvTimeTransaction);
             tvAmountTransaction=itemView.findViewById(R.id.tvAmountTransaction);
+            btnSendReceiveTransaction=itemView.findViewById(R.id.btnSendReceiveTransaction);
+
+            btnSendReceiveTransaction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int currentPosition = getAdapterPosition();
+                    if (currentPosition != RecyclerView.NO_POSITION) {
+
+                        if(transactions.get(currentPosition).getSend()==1){
+                            int amount;
+                            String phone_number;
+                            DatabaseHelperCustomer db=new DatabaseHelperCustomer(context);
+                            db.open();
+                            phone_number=db.getPhoneNumber(customer_id);
+                            db.close();
+                            amount=transactions.get(currentPosition).getAmount();
+
+                            String message="You have to pay me an amount of: "+amount;
+                            Uri uri = Uri.parse("smsto:" + phone_number);
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+                            intent.putExtra("sms_body", message);
+                            context.startActivity(intent);
+
+                        }
+
+                        else {
+                            Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.techlogix.mobilinkcustomer");
+                            if (intent != null) {
+                                context.startActivity(intent);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle("JazzCash Not Installed");
+                                builder.setMessage("JazzCash app is not installed on your device. Please install it to proceed.");
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.show();
+                            }
+                        }
+
+
+                    }
+
+                }
+            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

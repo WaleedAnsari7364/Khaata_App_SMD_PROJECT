@@ -147,7 +147,7 @@ public class SingleKhaataRecord extends AppCompatActivity implements Transaction
         // Retrieve the SharedPreferences instance
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.khaata_app.shared_prefs", Context.MODE_PRIVATE);
 
-        adapter = new TransactionAdapter(this, transactions, sharedPreferences);
+        adapter = new TransactionAdapter(this, transactions, sharedPreferences,customer_id);
         rvSingleRecordKhaata.setAdapter(adapter);
     }
 

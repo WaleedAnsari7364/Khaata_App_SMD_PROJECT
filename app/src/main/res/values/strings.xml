@@ -22,6 +22,8 @@
     <string name="Enter_Amount">Enter Amount</string>
     <string name="Enter_Phone">Enter Phone</string>
     <string name="Generate_Pdf">Generate PDF</string>
+    <string name="Send_Report">Send Report</string>
+    <string name="Request">Request</string>
     <string-array name="currency_options">
         <item>Rupees</item>
         <item>Dollar</item>

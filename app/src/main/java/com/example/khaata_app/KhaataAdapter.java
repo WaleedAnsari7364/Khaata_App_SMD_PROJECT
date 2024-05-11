@@ -3,8 +3,10 @@ package com.example.khaata_app;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,16 +28,20 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
     String selectedCurrency;
 
     ItemSelected parentActivity;
+    Button btnSendReceiveCustomer;
+    int customer_id;
 
     public interface ItemSelected{
         public void onItemClicked(int index);
     }
 
-    public KhaataAdapter(Context context, ArrayList<Customer> list, SharedPreferences sharedPreferences)
+    public KhaataAdapter(Context context, ArrayList<Customer> list, SharedPreferences sharedPreferences,int customerId)
     {
+        this.context = context;
         parentActivity=(ItemSelected) context;
         customers = list;
         selectedCurrency = sharedPreferences.getString("selected_currency", "Rupees");
+        customer_id=customerId;
     }
 
     @NonNull
@@ -54,11 +60,13 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
         if(customers.get(position).getRemaining_amount()>=0) {
             holder.tvRemainingAmount.setTextColor(red);
             holder.tvRemainingAmount.setText(getConvertedAmount(amount));
+            btnSendReceiveCustomer.setText("Request");
         }
         else{
             holder.tvRemainingAmount.setTextColor(green);
             double showed_value=Math.abs(amount);
             holder.tvRemainingAmount.setText(getConvertedAmount(showed_value));
+            btnSendReceiveCustomer.setText("Send");
         }
         holder.tvName.setText(customers.get(position).getName());
         holder.tvDate.setText(customers.get(position).getDate());
@@ -104,6 +112,45 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime= itemView.findViewById(R.id.tvTime);
             tvRemainingAmount=itemView.findViewById(R.id.tvRemainingAmount);
+            btnSendReceiveCustomer=itemView.findViewById(R.id.btnSendReceiveCustomer);
+
+            btnSendReceiveCustomer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int currentPosition = getAdapterPosition();
+                    if (currentPosition != RecyclerView.NO_POSITION) {
+
+                        if (customers.get(currentPosition).getRemaining_amount() >= 0) {
+                            int amount;
+                            String phone_number;
+                            phone_number = customers.get(currentPosition).getPhone_number();
+                            amount = customers.get(currentPosition).getRemaining_amount();
+
+                            String message = "You have to pay me an amount of: " + amount;
+                            Uri uri = Uri.parse("smsto:" + phone_number);
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+                            intent.putExtra("sms_body", message);
+                            context.startActivity(intent);
+                        } else {
+                            Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.techlogix.mobilinkcustomer");
+                            if (intent != null) {
+                                context.startActivity(intent);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle("JazzCash Not Installed");
+                                builder.setMessage("JazzCash app is not installed on your device. Please install it to proceed.");
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.show();
+                            }
+                        }
+                    }
+                }
+            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

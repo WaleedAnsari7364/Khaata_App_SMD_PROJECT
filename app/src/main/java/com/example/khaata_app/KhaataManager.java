@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class KhaataManager extends AppCompatActivity implements KhaataAdapter.ItemSelected {
 
     int Id;
+    int Customer_id;
     String customer_name;
     String selected_currency;
     Button btnBackKhaataManager,btnaddCustomer;
@@ -84,14 +85,14 @@ public class KhaataManager extends AppCompatActivity implements KhaataAdapter.It
         // Retrieve the SharedPreferences instance
         sharedPreferences = getSharedPreferences("com.example.khaata_app.shared_prefs", Context.MODE_PRIVATE);
 
-        adapter = new KhaataAdapter(this, customers, sharedPreferences);
+        adapter = new KhaataAdapter(this, customers, sharedPreferences,Customer_id);
         rvKhaata.setAdapter(adapter);
     }
 
     @Override
     public void onItemClicked(int index) {
         Toast.makeText(this, String.valueOf(customers.get(index).getCid()), Toast.LENGTH_SHORT).show();
-        int Customer_id=customers.get(index).getCid();
+        Customer_id=customers.get(index).getCid();
         customer_name=customers.get(index).getName();
         Intent intent = new Intent(KhaataManager.this, SingleKhaataRecord.class);
         intent.putExtra("user_id", Id);
