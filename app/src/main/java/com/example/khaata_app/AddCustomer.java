@@ -2,22 +2,35 @@ package com.example.khaata_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 public class AddCustomer extends AppCompatActivity {
 
     Button btnBackAddCustomer,btnAddAddCustomer;
     EditText etNameAddCustomer,etPhoneAddCustomer;
     int Id;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +82,32 @@ public class AddCustomer extends AppCompatActivity {
         myDatabaseHelper.open();
         myDatabaseHelper.insertCustomer(Id,name, formattedDate,formattedTime,phone);
         myDatabaseHelper.close();
+
+        // Adding to Firestore
+        Map<String, Object> customer = new HashMap<>();
+        customer.put("_id", "1");
+        customer.put("_date", formattedDate);
+        customer.put("_name", name);
+        customer.put("_phone_number", phone);
+        customer.put("_remaining_amount", "0");
+        customer.put("_time", formattedTime);
+        customer.put("_vendorid", Id);
+
+        db.collection("Customer_Table")
+                .add(customer)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("firebase2", "DocumentSnapshot added with ID: " + documentReference.getId());
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("firebase2", "Error adding document", e);
+                    }
+                });
 
     }
 }

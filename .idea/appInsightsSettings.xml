@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.khaata_app" />
+                  <option name="mobileSdkAppId" value="1:426961648421:android:23a52f5bd1d2e488bf38cc" />
+                  <option name="projectId" value="khata-app-fb72a" />
+                  <option name="projectNumber" value="426961648421" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -37,11 +38,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation ("com.google.android.material:material:1.4.0")
-    implementation ("androidx.core:core-ktx:version_number")
-    implementation ("com.itextpdf:itext7-core:7.2.1")
+    implementation (libs.material.v140)
+    implementation (libs.core.ktx)
+    implementation (libs.itext7.core)
 
 }

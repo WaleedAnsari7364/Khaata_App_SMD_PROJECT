@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,6 +17,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.telephony.SmsManager;
 
 import android.Manifest;
@@ -23,6 +27,10 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class SendTransaction extends AppCompatActivity {
@@ -33,6 +41,7 @@ public class SendTransaction extends AppCompatActivity {
     int vendor_id,customer_id;
     String customer_name;
     String selected_currency;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +112,34 @@ public class SendTransaction extends AppCompatActivity {
         myDatabaseHelper.open();
         myDatabaseHelper.insertTransaction(vendor_id,customer_id,name,formattedDate,formattedTime,1,0,Integer.parseInt(amount));
         myDatabaseHelper.close();
+
+        // Adding to Firestore
+        Map<String, Object> transaction = new HashMap<>();
+        transaction.put("_customerid", customer_id);
+        transaction.put("_amount", Integer.parseInt(amount));
+        transaction.put("_date", formattedDate);
+        transaction.put("_id", "1");
+        transaction.put("_name", name);
+        transaction.put("_receive", 0);
+        transaction.put("_send", 1);
+        transaction.put("_time", formattedTime);
+        transaction.put("_vendorid", vendor_id);
+
+        db.collection("Transaction_Table")
+                .add(transaction)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("firebase4", "DocumentSnapshot added with ID: " + documentReference.getId());
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("firebase4", "Error adding document", e);
+                    }
+                });
     }
 
     public void updateRemainingAmount(String amount){
