@@ -6,14 +6,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistrationActivity"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@color/background"
     android:orientation="vertical"
-    android:background="@color/background">
+    tools:context=".RegistrationActivity">
 
     <Button
         android:id="@+id/btnBackRegistration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:text="@string/back"
         android:textSize="20sp" />
@@ -27,8 +32,7 @@
         android:gravity="center"
         android:text="@string/registrationpage"
         android:textSize="34sp"
-        android:textStyle="bold|italic"
-        />
+        android:textStyle="bold|italic" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -40,6 +44,8 @@
             android:id="@+id/etUserNameRegistration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:hint="@string/Enter_username"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -54,6 +60,8 @@
             android:id="@+id/etEmailAddressRegistration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:hint="@string/add_email"
             android:inputType="textEmailAddress"
             android:textSize="20sp" />
@@ -70,6 +78,8 @@
             android:id="@+id/etPasswordRegistration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:hint="@string/add_password"
             android:inputType="textPassword"
             android:textSize="20sp" />
@@ -79,7 +89,9 @@
         android:id="@+id/btnRegistrationPage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:text="@string/register"
         android:textSize="20sp" />
 </LinearLayout>

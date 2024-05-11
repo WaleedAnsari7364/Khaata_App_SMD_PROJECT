@@ -204,13 +204,27 @@ public class KhaataAdapter extends RecyclerView.Adapter<KhaataAdapter.ViewHolder
                 })
                 .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        DatabaseHelperCustomer db=new DatabaseHelperCustomer(context);
-                        db.open();
-                        db.deleteCustomer(customer.getCid());
-                        db.close();
-                        customers.remove(position);
-                        notifyDataSetChanged();
-
+                        AlertDialog.Builder deleteConfirmationDialogBuilder = new AlertDialog.Builder(context);
+                        deleteConfirmationDialogBuilder.setTitle("Delete Confirmation");
+                        deleteConfirmationDialogBuilder.setMessage("Are you sure you want to delete this customer?");
+                        deleteConfirmationDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DatabaseHelperCustomer db=new DatabaseHelperCustomer(context);
+                                db.open();
+                                db.deleteCustomer(customer.getCid());
+                                db.close();
+                                customers.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        });
+                        deleteConfirmationDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        deleteConfirmationDialogBuilder.show();
                     }
                 });
 
