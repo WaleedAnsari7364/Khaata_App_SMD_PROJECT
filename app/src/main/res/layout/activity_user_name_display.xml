@@ -45,17 +45,24 @@
         android:text="@string/Move_to_Khaata"
         android:textSize="16sp" />
 
-    <Spinner
-        android:id="@+id/spinnerCurrency"
+    <androidx.cardview.widget.CardView
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:spinnerMode="dropdown"
-        android:entries="@array/currency_options"
-        android:padding="8dp"
-        android:textColor="@color/white"
-        android:popupBackground="@color/white"/>
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="#6750a4">
+
+        <Spinner
+            android:id="@+id/spinnerCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:entries="@array/currency_options"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            android:popupBackground="@color/white" />
+    </androidx.cardview.widget.CardView>
 
 
     <Button

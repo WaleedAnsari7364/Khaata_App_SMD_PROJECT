@@ -21,6 +21,14 @@
         android:text="@string/back"
         android:textSize="20sp" />
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/background"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="20dp">
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
@@ -30,8 +38,10 @@
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="@string/Khaata_Manager"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
+        android:textSize="30sp"
+        android:textStyle="bold|italic"
+        android:padding="20dp"/>
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/btnaddCustomer"
